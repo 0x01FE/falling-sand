@@ -13,14 +13,14 @@ public class Main
     static final int HEIGHT = 480;
     static final int WIDTH = 620;
 
-    static final int CELL_MAP_HEIGHT = 500;
-    static final int CELL_MAP_WIDTH = 500;
+    static final int CELL_MAP_HEIGHT = 100;//HEIGHT / 2;
+    static final int CELL_MAP_WIDTH = 100;//WIDTH / 2;
 
 
     public static void main(String[] args)
     {
         CellMap m = new CellMap(CELL_MAP_HEIGHT, CELL_MAP_WIDTH);
-        m.setCell(new Sand(0, 10));
+        m.setCell(new Sand(0, 40));
 
         JFrame frame = new JFrame();
         Container pane = frame.getContentPane();
@@ -53,6 +53,8 @@ public class Main
                 System.out.println(x + ", " + y);
 
                 Point mouse = viewToCellSpace(new Point(x, y));
+                
+                System.out.println("t " + mouse.x + ", " + mouse.y);
 
                 m.setCell(new Sand(mouse));
 

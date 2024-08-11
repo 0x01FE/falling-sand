@@ -5,39 +5,69 @@ import java.awt.*;
 
 public class CellMap
 {
-    public static final int CELL_SIZE = 10;
 
     public int height;
     public int width;
 
-    Cell[][] cells;
+    CellType[][] cells;
 
     public CellMap(int h, int w)
     {
         this.height = h;
         this.width = w;
-        this.cells = new Cell[h][w];
+        this.cells = new CellType[h][w];
     }
 
-    public void setCell(Cell c)
+    public void setCell(int x, int y, CellType c)
     {
-        this.cells[c.x][c.y] = c;
+        this.cells[x][y] = c;
     }
 
     public void update()
     {
-        for (Cell[] row : this.cells)
+        int y = 0;
+        for (int[] row : this.cells)
         {
-            for (Cell cell : row)
+            int x = 0;
+            for (int cell : row)
             {
-                if (cell != null)
-                    cell.update(this);
+                switch (cell)
+                {
+                    case CellType.AIR:
+                        break;
+                    case CellType.SAND:
+                        if (y == CellType.AIR)
+                            break;
+                        
+                        // Falling
+                        CellType under = getUnder(x, y);
+                        
+                        if (under == CellType.Air || under == CellType.WATER)
+                        {
+                            // Basically just swap them
+                            setCell(x, y + 1, cell);
+                            setCell(x, y, under);
+                        }
+                        break;
+                }
+                x++;    
             }
+            y++;
         }
+    }
+    
+    private CellType getUnder(int x, int y)
+    {
+        return this.cells[y + 1][x];
     }
 
     public void draw(Graphics g2, JPanel renderingPanel)
     {
+        System.out.println("cw " + this.width);
+        System.out.println("w " + renderingPanel.getWidth());
+        int cell_size = renderingPanel.getWidth() / this.width;
+        System.out.println(cell_size);
+    
 
         for (Cell[] row : this.cells)
         {
@@ -47,7 +77,7 @@ public class CellMap
                 {
                     g2.setColor(cell.color);
 
-                    g2.fillRect(cell.x - renderingPanel.getWidth(), cell.y - renderingPanel.getHeight(), CELL_SIZE, CELL_SIZE);
+                    g2.fillRect(cell.x * cell_size, renderingPanel.getHeight() - (cell.y * cell_size), cell_size, cell_size);
                 }
             }
         }
