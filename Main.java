@@ -1,5 +1,5 @@
 import sand.CellMap;
-import sand.Sand;
+import sand.CellType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +20,7 @@ public class Main
     public static void main(String[] args)
     {
         CellMap m = new CellMap(CELL_MAP_HEIGHT, CELL_MAP_WIDTH);
-        m.setCell(new Sand(0, 40));
+        m.setCell(50, 40, CellType.SAND);
 
         JFrame frame = new JFrame();
         Container pane = frame.getContentPane();
@@ -56,7 +56,7 @@ public class Main
                 
                 System.out.println("t " + mouse.x + ", " + mouse.y);
 
-                m.setCell(new Sand(mouse));
+                m.setCell(mouse.x, mouse.y, CellType.SAND);
 
             }
 
@@ -83,6 +83,7 @@ public class Main
             renderingPanel.repaint();
 
             m.update();
+            // m.print();
 
             try {
                 Thread.sleep(50);
@@ -100,7 +101,7 @@ public class Main
         float x_translate = (float) WIDTH / CELL_MAP_WIDTH;
         float y_translate = (float) HEIGHT / CELL_MAP_HEIGHT;
 
-        return new Point(Math.round(p.x / x_translate), Math.round(p.y / y_translate));
+        return new Point(Math.round(p.x / x_translate), CELL_MAP_HEIGHT - Math.round(p.y / y_translate));
     }
 
 }

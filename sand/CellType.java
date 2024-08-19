@@ -1,11 +1,12 @@
-package Sand;
+package sand;
 
 
-enum SandType
+public enum CellType
 {
-    AIR,
+    // AIR, Air can be assumed as null
     SAND,
-    WATER
+    WATER,
+    BOUNDARY
 }
 
 

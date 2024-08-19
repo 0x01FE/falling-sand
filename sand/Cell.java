@@ -2,18 +2,26 @@ package sand;
 
 import java.awt.Color;
 
-public abstract class Cell
+public class Cell
 {
     int x;
     int y;
+    CellType type;
     Color color;
 
-    Cell(int x, int y)
+    Cell(int x, int y, CellType type)
     {
+        this.type = type;
         this.x = x;
         this.y = y;
+        this.setColor();
     }
 
-    public abstract void update(CellMap m);
-    public abstract void generateColor();
+    void setColor()
+    {
+        if (this.type == CellType.SAND)
+        {
+            this.color = new Color(255, 185, 0);
+        }
+    }
 }
