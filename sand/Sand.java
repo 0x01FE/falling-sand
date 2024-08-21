@@ -8,58 +8,57 @@ public class Sand extends Cell
 
     public Sand(int x, int y)
     {
-        super(x, y);
-        generateColor();
+        super(x, y, CellType.SAND);
     }
 
     public Sand(Point p)
     {
-        super(p.x, p.y);
-        generateColor();
+        super(p.x, p.y, CellType.SAND);
     }
 
-    public void update(CellMap m)
-    {
-        if (this.y == 0)
+    public void update(CellMap m) {
+        // Check if at bottom
+        if (this.y >= m.height || this.y - 1 < 0)
             return;
 
-        // If there's nothing bellow the sand, fall
-        if (m.cells[this.y][this.x] == null)
-        {
-            this.y += 1;
+        Cell under = m.getUnder(this);
+
+        // Basically just swap them
+        if (under.type == CellType.AIR) {
+            m.swapCells(this, under);
         }
 
-        // Pick random side to check if there's a pixel bellow
-        Random rand = new Random();
-
-        int r = rand.nextInt(2);
-
-        int dx = 1;
-        if (r == 1 && this.x != 0)
-            dx *= -1;
-
-        if (m.cells[this.y - 1][this.x + dx] == null)
+        // If there is sand under the cell check to the sides
+        else if (under.type == CellType.SAND)
         {
-            this.y -= 1;
-            this.x += dx;
+            int side = 1;
+            Random rand = new Random();
+
+            int r = rand.nextInt(2);
+
+            if (r == 1)
+                side *= -1;
+
+            Cell side_cell = m.cells[this.y - 1][this.x + side];
+
+            if (side_cell.type == CellType.AIR)
+            {
+                m.swapCells(this, side_cell);
+                return;
+            }
+
+            side *= -1;
+            side_cell = m.cells[this.y - 1][this.x + side];
+            if (side_cell.type == CellType.AIR)
+            {
+                m.swapCells(this, side_cell);
+                return;
+            }
         }
-
-        // If at edge don't check other side
-        if (this.x == 0 || this.x == m.width)
-            return;
-
-        dx *= -1;
-
-        if (m.cells[this.y - 1][this.x + dx] == null)
-        {
-            this.y -= 1;
-            this.x += dx;
-        }
-
     }
 
-    public void generateColor()
+    void setColor()
     {
         this.color = new Color(255, 185, 0);
-    };
+    }
 }

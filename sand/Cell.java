@@ -2,7 +2,7 @@ package sand;
 
 import java.awt.Color;
 
-public class Cell
+public abstract class Cell
 {
     int x;
     int y;
@@ -17,11 +17,11 @@ public class Cell
         this.setColor();
     }
 
-    void setColor()
+    public void print()
     {
-        if (this.type == CellType.SAND)
-        {
-            this.color = new Color(255, 185, 0);
-        }
+        System.out.println(this.type + " at (" + this.x + ", " + this.y + ")");
     }
+
+    abstract void setColor();
+    abstract void update(CellMap m);
 }

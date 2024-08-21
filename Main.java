@@ -1,5 +1,6 @@
 import sand.CellMap;
 import sand.CellType;
+import sand.Sand;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +21,7 @@ public class Main
     public static void main(String[] args)
     {
         CellMap m = new CellMap(CELL_MAP_HEIGHT, CELL_MAP_WIDTH);
-        m.setCell(50, 40, CellType.SAND);
+        m.setCell(new Sand(50, 40));
 
         JFrame frame = new JFrame();
         Container pane = frame.getContentPane();
@@ -53,10 +54,10 @@ public class Main
                 System.out.println(x + ", " + y);
 
                 Point mouse = viewToCellSpace(new Point(x, y));
-                
+
                 System.out.println("t " + mouse.x + ", " + mouse.y);
 
-                m.setCell(mouse.x, mouse.y, CellType.SAND);
+                m.setCell(new Sand(mouse.x, mouse.y));
 
             }
 
@@ -86,7 +87,7 @@ public class Main
             // m.print();
 
             try {
-                Thread.sleep(50);
+                Thread.sleep(30);
             } catch (Exception e)
             {
                 e.printStackTrace();

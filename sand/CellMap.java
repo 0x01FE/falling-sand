@@ -16,21 +16,47 @@ public class CellMap
         this.height = h;
         this.width = w;
         this.cells = new Cell[h][w];
+
+        wipeMap();
     }
 
-    public void setCell(int x, int y, CellType c)
+    public void wipeMap()
     {
-        this.cells[y][x] = new Cell(x, y, c);
+        int y = 0;
+        for (Cell[] row : this.cells)
+        {
+            int x = 0;
+            for (Cell cell : row)
+            {
+                setCell(new Air(x, y));
+                x++;
+            }
+            y++;
+        }
     }
-
     public void wipeCell(int x, int y)
     {
-        this.cells[y][x] = null;
+        this.cells[y][x] = new Air(x, y);
     }
 
     public void setCell(Cell c)
     {
         this.cells[c.y][c.x] = c;
+    }
+
+    public void swapCells(Cell c1, Cell c2)
+    {
+        int temp_x = c1.x;
+        int temp_y = c1.y;
+
+        c1.x = c2.x;
+        c1.y = c2.y;
+
+        c2.x = temp_x;
+        c2.y = temp_y;
+
+        setCell(c1);
+        setCell(c2);
     }
 
     public void print()
@@ -60,52 +86,13 @@ public class CellMap
                 if (cell == null)
                     continue;
 
-                else if (cell.type == CellType.SAND)
-                {
-                    // No clue what this was doing
-                    // if (y == CellType.AIR)
-                    //     continue;
-                        
-                    // Falling
-                    // Check if at bottom
-                    if (cell.y >= this.height || cell.y - 1 < 0)
-                        continue;
-
-                    Cell under = getUnder(cell);
-                    boolean fall = (under == null);
-
-                    if (!fall)
-                    {
-                        fall = (under.type == CellType.WATER);
-                    }
-
-                    // Basically just swap them
-                    if (fall)
-                    {
-                        int old_x = cell.x;
-                        int old_y = cell.y;
-
-                        // System.out.println("sand is falling, new coords" + cell.x + ", " + (cell.y - 1));
-                        setCell(cell.x, cell.y - 1, cell.type);
-
-                        // Determine CellType of where we were
-                        CellType prevType = null;
-                        if (under != null)
-                        {
-                            prevType = under.type;
-                        }
-
-                        // System.out.println("new air coords, " + cell.x + ", " + cell.y + ", " + prevType);
-                        this.wipeCell(old_x, old_y);
-                        // System.out.println("setting " + old_x + ", " + old_y + " to null");
-                    }
-                }
+                cell.update(this);
             }
         }
     }
 
 
-    private Cell getUnder(Cell c)
+    public Cell getUnder(Cell c)
     {
         return this.cells[c.y - 1][c.x];
     }
