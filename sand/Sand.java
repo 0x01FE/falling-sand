@@ -23,8 +23,7 @@ public class Sand extends Cell
 
         Cell under = m.getUnder(this);
 
-        // Basically just swap them
-        if (under.type == CellType.AIR) {
+        if (under.type == CellType.AIR || under.type == CellType.WATER) {
             m.swapCells(this, under);
         }
 
@@ -59,6 +58,13 @@ public class Sand extends Cell
 
     void setColor()
     {
-        this.color = new Color(255, 185, 0);
+        Random rand = new Random();
+        int mod = rand.nextInt(11);
+        float hue = (float) ((36 + mod) / 359.0);
+        int saturation = 1;
+        float blackness = (float) (75 / 100.0);
+
+//        this.color = new Color(255, 185, 0);
+        this.color = Color.getHSBColor(hue, saturation, blackness);
     }
 }

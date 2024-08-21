@@ -10,12 +10,18 @@ public class CellMap
     public int width;
 
     Cell[][] cells;
+    public Point mouse;
+    public boolean mouse_pressed;
+    public CellType cursor_type;
 
     public CellMap(int h, int w)
     {
         this.height = h;
         this.width = w;
         this.cells = new Cell[h][w];
+
+        this.mouse_pressed = false;
+        this.cursor_type = CellType.SAND;
 
         wipeMap();
     }
@@ -78,7 +84,9 @@ public class CellMap
 
     public void update()
     {
-        System.out.println("Updating map...");
+        if (this.mouse_pressed)
+            this.setCell(new Sand(this.mouse.x, this.mouse.y));
+//        System.out.println("Updating map...");
         for (Cell[] row : this.cells)
         {
             for (Cell cell : row)
