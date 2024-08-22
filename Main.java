@@ -9,14 +9,16 @@ import java.awt.event.*;
 
 public class Main
 {
-    static final int HEIGHT = 480 * 2;
-    static final int WIDTH = 640 * 2;
-    public static final int CELL_SIZE = 3; // IN PIXELS
+    static final int HEIGHT = 480 * 1;
+    static final int WIDTH = 640 * 1;
+    public static final int CELL_SIZE = 6; // IN PIXELS
 
     static final int CELL_MAP_HEIGHT = HEIGHT / CELL_SIZE;
     static final int CELL_MAP_WIDTH = WIDTH / CELL_SIZE;
 
-//    static final int
+    // TPS / FPS
+    static final int TARGET_TPS = 90;
+    static final int TARGET_FPS = 60;
 
 
     public static void main(String[] args)
@@ -122,15 +124,62 @@ public class Main
         frame.pack();
         frame.setVisible(true);
 
+        long current_time;
+
+        long frameStartTime = System.currentTimeMillis();
+        long frameEndTime;
+        double frameDelta;
+
+        long tickStartTime = System.currentTimeMillis();
+        long tickEndTime;
+        double tickDelta;
+
+        long sleep_time = (long)Math.floor(1000.0 / TARGET_FPS);
+
+        int frames = 0;
+        double fps = 0;
+
         while (true)
         {
             renderingPanel.repaint();
+            frames++;
 
-            m.update();
-            // m.print();
+            current_time = System.currentTimeMillis();
+
+            frameEndTime = current_time;
+            tickEndTime = current_time;
+
+            frameDelta = (double) frameEndTime - frameStartTime;
+
+            if (frameDelta > 1000)
+            {
+                fps = frames / (frameDelta/1000);
+
+                System.out.println("FPS: " + fps);
+                frames = 0;
+                frameStartTime = System.currentTimeMillis();
+            }
+
+            if (fps != 0)
+            {
+                if (fps < TARGET_FPS * 0.8 && fps > TARGET_FPS * 0.4)
+                {
+                    sleep_time = (long) ((sleep_time * TARGET_FPS) / fps);
+                } else if (fps < TARGET_FPS * 0.4)
+                {
+                    sleep_time = 0;
+                }
+            }
+
+            tickDelta = (double) (tickEndTime - tickStartTime);
+            if (tickDelta >= (1000.0 / TARGET_TPS))
+            {
+                m.update();
+                tickStartTime = System.currentTimeMillis();
+            }
 
             try {
-                Thread.sleep(30);
+                Thread.sleep(sleep_time);
             } catch (Exception e)
             {
                 e.printStackTrace();
