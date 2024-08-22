@@ -9,18 +9,19 @@ import java.awt.event.*;
 
 public class Main
 {
-    static final int HEIGHT = 480;
-    static final int WIDTH = 620;
+    static final int HEIGHT = 480 * 2;
+    static final int WIDTH = 640 * 2;
+    public static final int CELL_SIZE = 3; // IN PIXELS
 
-    static final int CELL_MAP_HEIGHT = 100;//HEIGHT / 2;
-    static final int CELL_MAP_WIDTH = 100;//WIDTH / 2;
+    static final int CELL_MAP_HEIGHT = HEIGHT / CELL_SIZE;
+    static final int CELL_MAP_WIDTH = WIDTH / CELL_SIZE;
 
 //    static final int
 
 
     public static void main(String[] args)
     {
-        CellMap m = new CellMap(CELL_MAP_HEIGHT, CELL_MAP_WIDTH);
+        CellMap m = new CellMap(CELL_MAP_HEIGHT, CELL_MAP_WIDTH, CELL_SIZE);
         m.setCell(new Sand(50, 40));
 
         JFrame frame = new JFrame();
@@ -39,6 +40,8 @@ public class Main
                 m.draw(g2, this);
             }
         };
+
+        renderingPanel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         renderingPanel.addMouseListener(new MouseListener()
         {
@@ -114,8 +117,9 @@ public class Main
 
         pane.add(renderingPanel, BorderLayout.CENTER);
 
-        frame.setSize(WIDTH, HEIGHT);
+//        frame.setSize(WIDTH, HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
         frame.setVisible(true);
 
         while (true)
@@ -138,10 +142,15 @@ public class Main
 
     static Point viewToCellSpace(Point p)
     {
-        float x_translate = (float) WIDTH / CELL_MAP_WIDTH;
-        float y_translate = (float) HEIGHT / CELL_MAP_HEIGHT;
+//        System.out.println("Mouse clicked at (" + p.x + ", " + p.y + ").");
+        float x_translate = (float) WIDTH / (CELL_MAP_WIDTH - 1);
+        float y_translate = (float) HEIGHT / (CELL_MAP_HEIGHT - 1);
 
-        return new Point(Math.round(p.x / x_translate), CELL_MAP_HEIGHT - Math.round(p.y / y_translate));
+        Point ans = new Point(Math.round(p.x / x_translate), CELL_MAP_HEIGHT - Math.round(p.y / y_translate));
+
+//        System.out.println("Translated Point (" + ans.x + ", " + ans.y + ")");
+
+        return ans;
     }
 
 }

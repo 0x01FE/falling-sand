@@ -14,10 +14,13 @@ public class CellMap
     public boolean mouse_pressed;
     public CellType cursor_type;
 
-    public CellMap(int h, int w)
+    public int cell_size;
+
+    public CellMap(int h, int w, int cell_size)
     {
         this.height = h;
         this.width = w;
+        this.cell_size = cell_size;
         this.cells = new Cell[h][w];
 
         this.mouse_pressed = false;
@@ -47,6 +50,9 @@ public class CellMap
 
     public void setCell(Cell c)
     {
+        if (c.x >= this.width || c.y >= this.height || c.y < 0 || c.x < 0)
+            return;
+
         this.cells[c.y][c.x] = c;
     }
 
@@ -117,8 +123,7 @@ public class CellMap
     {
         // System.out.println("cw " + this.width);
         // System.out.println("w " + renderingPanel.getWidth());
-        int cell_size = renderingPanel.getWidth() / this.width;
-//        System.out.println(cell_size);
+//        System.out.println(CELL_SIZE);
     
 
         for (Cell[] row : this.cells)
@@ -130,8 +135,9 @@ public class CellMap
                     // System.out.println("Drawing sand!");
                     g2.setColor(cell.color);
 
-                    // System.out.println("Filling rect with " + (cell.x * cell_size) + ", " + (renderingPanel.getHeight() - (cell.y * cell_size)));
-                    g2.fillRect(cell.x * cell_size, (renderingPanel.getHeight() - (cell.y * cell_size)) - cell_size, cell_size, cell_size);
+                    // System.out.println("Filling rect with " + (cell.x * CELL_SIZE) + ", " + (renderingPanel.getHeight() - (cell.y * CELL_SIZE)));
+//                    System.out.println(cell.x + " * " + CELL_SIZE);
+                    g2.fillRect(cell.x * this.cell_size, (renderingPanel.getHeight() - (cell.y * this.cell_size)) - this.cell_size, this.cell_size, this.cell_size);
                 }
             }
         }
