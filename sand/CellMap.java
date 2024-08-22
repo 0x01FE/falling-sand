@@ -82,10 +82,18 @@ public class CellMap
         System.out.print("\n");
     }
 
+    private void placeCell()
+    {
+        if (this.cursor_type == CellType.SAND)
+            this.setCell(new Sand(this.mouse.x, this.mouse.y));
+        else if (this.cursor_type == CellType.WATER)
+            this.setCell(new Water(this.mouse.x, this.mouse.y));
+    }
+
     public void update()
     {
         if (this.mouse_pressed)
-            this.setCell(new Sand(this.mouse.x, this.mouse.y));
+            this.placeCell();
 //        System.out.println("Updating map...");
         for (Cell[] row : this.cells)
         {
@@ -110,7 +118,7 @@ public class CellMap
         // System.out.println("cw " + this.width);
         // System.out.println("w " + renderingPanel.getWidth());
         int cell_size = renderingPanel.getWidth() / this.width;
-        System.out.println(cell_size);
+//        System.out.println(cell_size);
     
 
         for (Cell[] row : this.cells)

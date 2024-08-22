@@ -38,21 +38,22 @@ public class Sand extends Cell
             if (r == 1)
                 side *= -1;
 
-            Cell side_cell = m.cells[this.y - 1][this.x + side];
-
-            if (side_cell.type == CellType.AIR)
+            for (int i = 0; i < 2; i++)
             {
-                m.swapCells(this, side_cell);
-                return;
+                if (!(this.x + side >= m.width || this.x + side < 0))
+                {
+                    Cell side_cell = m.cells[this.y - 1][this.x + side];
+
+                    if (side_cell.type == CellType.AIR)
+                    {
+                        m.swapCells(this, side_cell);
+                        return;
+                    }
+                }
+
+                side *= -1;
             }
 
-            side *= -1;
-            side_cell = m.cells[this.y - 1][this.x + side];
-            if (side_cell.type == CellType.AIR)
-            {
-                m.swapCells(this, side_cell);
-                return;
-            }
         }
     }
 

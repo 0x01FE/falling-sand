@@ -18,6 +18,7 @@ public class Water extends Cell
             m.swapCells(this, under);
         }
 
+        // If cant fall, move to random side
         else
         {
             int side = 1;
@@ -28,10 +29,20 @@ public class Water extends Cell
             if (r == 1)
                 side *= -1;
 
-            Cell side_cell = m.cells[this.y][this.x + side];
+            for (int i = 0; i < 2; i++)
+            {
+                if (!(this.x + side >= m.width || this.x + side < 0))
+                {
+                    Cell side_cell = m.cells[this.y][this.x + side];
 
-            if (side_cell.type == CellType.AIR)
-                m.swapCells(this, side_cell);
+                    if (side_cell.type == CellType.AIR)
+                    {
+                        m.swapCells(this, side_cell);
+                        return;
+                    }
+                }
+                side *= -1;
+            }
         }
     }
 

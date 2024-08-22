@@ -15,7 +15,7 @@ public class Main
     static final int CELL_MAP_HEIGHT = 100;//HEIGHT / 2;
     static final int CELL_MAP_WIDTH = 100;//WIDTH / 2;
 
-    static final int
+//    static final int
 
 
     public static void main(String[] args)
@@ -89,15 +89,22 @@ public class Main
 
         renderingPanel.addKeyListener(new KeyListener() {
             @Override
-            public void keyTyped(KeyEvent keyEvent) {
-                switch (keyEvent.getKeyCode()) {
-                    case KeyEvent.VK_1 -> m.cursor_type = CellType.SAND;
-                    case KeyEvent.VK_2 -> m.cursor_type = CellType.WATER;
-                }
-            }
+            public void keyTyped(KeyEvent keyEvent) {}
 
             @Override
-            public void keyPressed(KeyEvent keyEvent) {}
+            public void keyPressed(KeyEvent keyEvent)
+            {
+                switch (keyEvent.getKeyCode())
+                {
+                    case KeyEvent.VK_1 -> m.cursor_type = CellType.SAND;
+                    case KeyEvent.VK_2 -> m.cursor_type = CellType.WATER;
+                    case KeyEvent.VK_ESCAPE -> {
+                        frame.dispose();
+                        System.exit(1);
+                    }
+                    case KeyEvent.VK_C -> m.wipeMap();
+                }
+            }
 
             @Override
             public void keyReleased(KeyEvent keyEvent) {}
