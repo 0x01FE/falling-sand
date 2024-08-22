@@ -88,12 +88,13 @@ public class CellMap
         System.out.print("\n");
     }
 
-    private void placeCell()
-    {
+    private void placeCell() {
         if (this.cursor_type == CellType.SAND)
             this.setCell(new Sand(this.mouse.x, this.mouse.y));
         else if (this.cursor_type == CellType.WATER)
             this.setCell(new Water(this.mouse.x, this.mouse.y));
+        else if (this.cursor_type == CellType.STONE)
+            this.setCell(new Stone(this.mouse.x, this.mouse.y));
     }
 
     public void update()

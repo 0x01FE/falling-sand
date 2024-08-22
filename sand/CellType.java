@@ -7,6 +7,7 @@ public enum CellType
     AIR,
     SAND,
     WATER,
+    STONE,
     BOUNDARY
 }
 

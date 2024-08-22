@@ -103,6 +103,7 @@ public class Main
                 {
                     case KeyEvent.VK_1 -> m.cursor_type = CellType.SAND;
                     case KeyEvent.VK_2 -> m.cursor_type = CellType.WATER;
+                    case KeyEvent.VK_3 -> m.cursor_type = CellType.STONE;
                     case KeyEvent.VK_ESCAPE -> {
                         frame.dispose();
                         System.exit(1);
