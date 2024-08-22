@@ -4,3 +4,4 @@
 *.bat
 *.iml
 .idea
+out/*

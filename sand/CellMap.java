@@ -2,6 +2,7 @@ package sand;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class CellMap
 {
@@ -97,6 +98,53 @@ public class CellMap
             this.setCell(new Stone(this.mouse.x, this.mouse.y));
     }
 
+    public ArrayList<Cell> getNeighbors(Cell c)
+    {
+        boolean negative_y = c.y - 1 >= 0;
+        boolean positive_y = c.y + 1 < this.height;
+
+        ArrayList<Cell> cells = new ArrayList<Cell>();
+
+        // x checks
+        int x = c.x;
+
+        if (negative_y)
+            cells.add(this.cells[c.y - 1][x]);
+
+        if (positive_y)
+            cells.add(this.cells[c.y + 1][x]);
+
+        // x - 1 checks
+        if (c.x - 1 >= 0)
+        {
+            x = c.x - 1;
+
+            if (negative_y)
+                cells.add(this.cells[c.y - 1][x]);
+
+            cells.add(this.cells[c.y][x]);
+
+            if (positive_y)
+                cells.add(this.cells[c.y + 1][x]);
+        }
+
+        // x + 1 checks
+        if (c.x + 1 < this.width)
+        {
+            x = c.x + 1;
+
+            if (negative_y)
+                cells.add(this.cells[c.y - 1][x]);
+
+            cells.add(this.cells[c.y][x]);
+
+            if (positive_y)
+                cells.add(this.cells[c.y + 1][x]);
+        }
+
+        return cells;
+    }
+
     public void update()
     {
         if (this.mouse_pressed)
@@ -113,7 +161,6 @@ public class CellMap
             }
         }
     }
-
 
     public Cell getUnder(Cell c)
     {

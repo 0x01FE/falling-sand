@@ -1,6 +1,7 @@
 package sand;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Water extends Cell
@@ -44,10 +45,26 @@ public class Water extends Cell
                 side *= -1;
             }
         }
+
+        this.updateColor(m);
     }
 
-    void setColor()
+    void setColor() { this.color = new Color(101, 101, 210); }
+
+    void updateColor(CellMap m)
     {
-        this.color = new Color(45, 45, 200);
+        this.setColor();
+
+        ArrayList<Cell> cells = m.getNeighbors(this);
+        int water_neighbors = 0;
+
+        for (Cell c : cells)
+            if (c.type == CellType.WATER)
+                water_neighbors++;
+
+        for (int i = 0; i < water_neighbors / 2; i++)
+            this.color = this.color.darker();
+
+
     }
 }
