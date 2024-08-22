@@ -9,8 +9,8 @@ import java.awt.event.*;
 
 public class Main
 {
-    static final int HEIGHT = 480 * 1;
-    static final int WIDTH = 640 * 1;
+    static final int HEIGHT = 480 * 2;
+    static final int WIDTH = 640 * 2;
     public static final int CELL_SIZE = 6; // IN PIXELS
 
     static final int CELL_MAP_HEIGHT = HEIGHT / CELL_SIZE;
