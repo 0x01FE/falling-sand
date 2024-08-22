@@ -8,6 +8,7 @@ public enum CellType
     SAND,
     WATER,
     STONE,
+    FIRE,
     BOUNDARY
 }
 
