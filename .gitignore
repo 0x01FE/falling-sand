@@ -1,0 +1,6 @@
+*.class
+*.sh
+.vscode
+*.bat
+*.iml
+.idea

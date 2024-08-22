@@ -3,32 +3,23 @@ package sand;
 import java.awt.*;
 import java.util.Random;
 
-public class Sand extends Cell
+public class Water extends Cell
 {
+    public Water(int x, int y) { super(x, y, CellType.WATER); }
 
-    public Sand(int x, int y)
+    public void update(CellMap m)
     {
-        super(x, y, CellType.SAND);
-    }
-
-    public Sand(Point p)
-    {
-        super(p.x, p.y, CellType.SAND);
-    }
-
-    public void update(CellMap m) {
-        // Check if at bottom
         if (this.y >= m.height || this.y - 1 < 0)
             return;
 
         Cell under = m.getUnder(this);
 
-        if (under.type == CellType.AIR || under.type == CellType.WATER) {
+        if (under.type == CellType.AIR) {
             m.swapCells(this, under);
         }
 
-        // If there is sand under the cell check to the sides
-        else if (under.type == CellType.SAND)
+        // If cant fall, move to random side
+        else
         {
             int side = 1;
             Random rand = new Random();
@@ -42,7 +33,7 @@ public class Sand extends Cell
             {
                 if (!(this.x + side >= m.width || this.x + side < 0))
                 {
-                    Cell side_cell = m.cells[this.y - 1][this.x + side];
+                    Cell side_cell = m.cells[this.y][this.x + side];
 
                     if (side_cell.type == CellType.AIR)
                     {
@@ -50,22 +41,13 @@ public class Sand extends Cell
                         return;
                     }
                 }
-
                 side *= -1;
             }
-
         }
     }
 
     void setColor()
     {
-        Random rand = new Random();
-        int mod = rand.nextInt(11);
-        float hue = (float) ((36 + mod) / 359.0);
-        int saturation = 1;
-        float blackness = (float) (75 / 100.0);
-
-//        this.color = new Color(255, 185, 0);
-        this.color = Color.getHSBColor(hue, saturation, blackness);
+        this.color = new Color(45, 45, 200);
     }
 }

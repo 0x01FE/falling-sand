@@ -6,14 +6,22 @@ public abstract class Cell
 {
     int x;
     int y;
+    CellType type;
     Color color;
 
-    Cell(int x, int y)
+    Cell(int x, int y, CellType type)
     {
+        this.type = type;
         this.x = x;
         this.y = y;
+        this.setColor();
     }
 
-    public abstract void update(CellMap m);
-    public abstract void generateColor();
+    public void print()
+    {
+        System.out.println(this.type + " at (" + this.x + ", " + this.y + ")");
+    }
+
+    abstract void setColor();
+    abstract void update(CellMap m);
 }
