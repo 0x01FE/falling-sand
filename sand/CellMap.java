@@ -59,6 +59,9 @@ public class CellMap
 
     public void swapCells(Cell c1, Cell c2)
     {
+        if (c1.locked || c2.locked)
+            return;
+
         int temp_x = c1.x;
         int temp_y = c1.y;
 

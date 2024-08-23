@@ -35,7 +35,7 @@ public class Sand extends Cell
 
             int r = rand.nextInt(2);
 
-            if (r == 1)
+            if (r == 1)1
                 side *= -1;
 
             for (int i = 0; i < 2; i++)

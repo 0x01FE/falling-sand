@@ -27,6 +27,44 @@ public class Fire extends Cell
         long current_time = System.currentTimeMillis();
         long timeDelta = current_time - this.last_move;
 
+        // Set Things on Fire or die if no air
+        ArrayList<Cell> neighbors = m.getNeighbors(this);
+        boolean is_air = false;
+
+        for (Cell target : neighbors)
+        {
+            for (CellType material : FLAMMABLE_MATERIALS)
+            {
+                if (target.type == material)
+                {
+                    ArrayList<Cell> target_neighbors = m.getNeighbors(target);
+                    boolean is_air_for_spread = false;
+
+                    for (Cell target_neighbor : target_neighbors)
+                    {
+                        if (target_neighbor.type == CellType.AIR)
+                        {
+                            is_air_for_spread = true;
+                            break;
+                        }
+                    }
+
+                    if (is_air_for_spread)
+                        m.setCell(new Fire(target.x, target.y));
+                }
+
+                if (target.type == CellType.AIR)
+                    is_air = true;
+            }
+        }
+
+        // Flame dies out if no oxygen (air)
+        if (!is_air)
+        {
+            m.wipeCell(this);
+            return;
+        }
+
         // Check if can rise
         if (this.y + 1 < m.height && timeDelta >= 300)
         {
@@ -57,21 +95,6 @@ public class Fire extends Cell
 
             this.last_smoke = System.currentTimeMillis();
         }
-
-        // Set Things on Fire
-        ArrayList<Cell> neighbors = m.getNeighbors(this);
-
-        for (Cell c : neighbors)
-        {
-            for (CellType material : FLAMMABLE_MATERIALS)
-            {
-                if (c.type == material)
-                {
-                    m.setCell(new Fire(c.x, c.y));
-                }
-            }
-        }
-
 
         this.updateColor();
     }

@@ -8,12 +8,14 @@ public abstract class Cell
     int y;
     CellType type;
     Color color;
+    boolean locked; // If locked, cannot be swapped
 
     Cell(int x, int y, CellType type)
     {
         this.type = type;
         this.x = x;
         this.y = y;
+        this.locked = false;
         this.setColor();
     }
 

@@ -4,7 +4,11 @@ import java.awt.*;
 
 public class Stone extends Cell
 {
-    public Stone(int x, int y) { super(x, y, CellType.STONE); }
+    public Stone(int x, int y)
+    {
+        super(x, y, CellType.STONE);
+        this.locked = true;
+    }
 
     public void update(CellMap m) {};
 
