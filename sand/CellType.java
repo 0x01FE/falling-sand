@@ -9,6 +9,8 @@ public enum CellType
     WATER,
     STONE,
     FIRE,
+    SMOKE,
+    OIL,
     BOUNDARY
 }
 

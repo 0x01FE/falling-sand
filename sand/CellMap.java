@@ -99,6 +99,8 @@ public class CellMap
             this.setCell(new Stone(this.mouse.x, this.mouse.y));
         else if (this.cursor_type == CellType.FIRE)
             this.setCell(new Fire(this.mouse.x, this.mouse.y));
+        else if (this.cursor_type == CellType.OIL)
+            this.setCell(new Oil(this.mouse.x, this.mouse.y));
     }
 
     public ArrayList<Cell> getNeighbors(Cell c)
