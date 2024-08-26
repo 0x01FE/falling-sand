@@ -1,6 +1,6 @@
-import sand.CellMap;
-import sand.CellType;
-import sand.Sand;
+import cells.CellMap;
+import cells.CellType;
+import cells.Sand;
 
 import javax.swing.*;
 import java.awt.*;

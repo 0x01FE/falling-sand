@@ -1,4 +1,4 @@
-package sand;
+package cells;
 
 import java.awt.*;
 import java.util.Random;

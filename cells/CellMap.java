@@ -1,4 +1,4 @@
-package sand;
+package cells;
 
 import javax.swing.*;
 import java.awt.*;

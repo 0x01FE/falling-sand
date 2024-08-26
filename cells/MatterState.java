@@ -1,4 +1,4 @@
-package sand;
+package cells;
 
 public enum MatterState
 {
