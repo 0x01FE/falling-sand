@@ -4,6 +4,18 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+/*
+
+Water and other liquids tend to skew to the left for some reason. At first I thought it was the Java
+random number generator being skewed but that doesn't seem to be the case. In (r == 1) 1 can be changed to 0 and get the same results.
+I think the issue is actually with how the map updates from left to right.
+
+Solution: Update the map to use a sort of frame buffer, where the new updated map is written to a seperated array that won't
+interfere with other cells.
+
+*/
+
+
 public class Water extends Cell
 {
     public Water(int x, int y) { super(x, y, CellType.WATER); }

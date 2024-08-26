@@ -85,6 +85,7 @@ public class Main
             public void mouseDragged(MouseEvent e)
             {
                 m.mouse = viewToCellSpace(new Point(e.getX(), e.getY()));
+                m.placeCell();
             }
 
             @Override

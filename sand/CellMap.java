@@ -92,7 +92,7 @@ public class CellMap
         System.out.print("\n");
     }
 
-    private void placeCell()
+    public void placeCell()
     {
         if (this.cursor_type == CellType.SAND)
             this.setCell(new Sand(this.mouse.x, this.mouse.y));
