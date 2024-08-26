@@ -10,7 +10,8 @@ public class CellMap
     public int height;
     public int width;
 
-    Cell[][] cells;
+    Cell[][] map;
+    Cell[][] buffer;
     public Point mouse;
     public boolean mouse_pressed;
     public CellType cursor_type;
@@ -22,7 +23,7 @@ public class CellMap
         this.height = h;
         this.width = w;
         this.cell_size = cell_size;
-        this.cells = new Cell[h][w];
+        this.map = new Cell[h][w];
 
         this.mouse_pressed = false;
         this.cursor_type = CellType.SAND;
@@ -33,7 +34,7 @@ public class CellMap
     public void wipeMap()
     {
         int y = 0;
-        for (Cell[] row : this.cells)
+        for (Cell[] row : this.map)
         {
             int x = 0;
             for (Cell cell : row)
@@ -46,7 +47,7 @@ public class CellMap
     }
     public void wipeCell(Cell c)
     {
-        this.cells[c.y][c.x] = new Air(c.x, c.y);
+        this.map[c.y][c.x] = new Air(c.x, c.y);
     }
 
     public void setCell(Cell c)
@@ -54,7 +55,7 @@ public class CellMap
         if (c.x >= this.width || c.y >= this.height || c.y < 0 || c.x < 0)
             return;
 
-        this.cells[c.y][c.x] = c;
+        this.map[c.y][c.x] = c;
     }
 
     public void swapCells(Cell c1, Cell c2)
@@ -78,7 +79,7 @@ public class CellMap
     public void print()
     {
         System.out.println("Printing Map...");
-        for (Cell[] row : this.cells)
+        for (Cell[] row : this.map)
         {
             for (Cell c : row)
             {
@@ -117,10 +118,10 @@ public class CellMap
         int x = c.x;
 
         if (negative_y)
-            cells.add(this.cells[c.y - 1][x]);
+            cells.add(this.map[c.y - 1][x]);
 
         if (positive_y)
-            cells.add(this.cells[c.y + 1][x]);
+            cells.add(this.map[c.y + 1][x]);
 
         // x - 1 checks
         if (c.x - 1 >= 0)
@@ -128,12 +129,12 @@ public class CellMap
             x = c.x - 1;
 
             if (negative_y)
-                cells.add(this.cells[c.y - 1][x]);
+                cells.add(this.map[c.y - 1][x]);
 
-            cells.add(this.cells[c.y][x]);
+            cells.add(this.map[c.y][x]);
 
             if (positive_y)
-                cells.add(this.cells[c.y + 1][x]);
+                cells.add(this.map[c.y + 1][x]);
         }
 
         // x + 1 checks
@@ -142,12 +143,12 @@ public class CellMap
             x = c.x + 1;
 
             if (negative_y)
-                cells.add(this.cells[c.y - 1][x]);
+                cells.add(this.map[c.y - 1][x]);
 
-            cells.add(this.cells[c.y][x]);
+            cells.add(this.map[c.y][x]);
 
             if (positive_y)
-                cells.add(this.cells[c.y + 1][x]);
+                cells.add(this.map[c.y + 1][x]);
         }
 
         return cells;
@@ -158,7 +159,7 @@ public class CellMap
         if (this.mouse_pressed)
             this.placeCell();
 //        System.out.println("Updating map...");
-        for (Cell[] row : this.cells)
+        for (Cell[] row : this.map)
         {
             for (Cell cell : row)
             {
@@ -172,7 +173,7 @@ public class CellMap
 
     public Cell getUnder(Cell c)
     {
-        return this.cells[c.y - 1][c.x];
+        return this.map[c.y - 1][c.x];
     }
 
     public void draw(Graphics g2, JPanel renderingPanel)
@@ -182,7 +183,7 @@ public class CellMap
 //        System.out.println(CELL_SIZE);
     
 
-        for (Cell[] row : this.cells)
+        for (Cell[] row : this.map)
         {
             for (Cell cell : row)
             {

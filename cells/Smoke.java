@@ -26,7 +26,7 @@ public class Smoke extends Cell {
         // Check if can rise
         if (this.y + 1 < m.height && timeDelta >= 100)
         {
-            Cell above = m.cells[this.y + 1][this.x];
+            Cell above = m.map[this.y + 1][this.x];
             int r = rand.nextInt(7);
 
             if (above.type == CellType.AIR && r != 0)
@@ -44,7 +44,7 @@ public class Smoke extends Cell {
                 {
                     if (!(this.x + side >= m.width || this.x + side < 0) && !moved)
                     {
-                        Cell side_cell = m.cells[this.y][this.x + side];
+                        Cell side_cell = m.map[this.y][this.x + side];
 
                         if (side_cell.type == CellType.AIR)
                         {

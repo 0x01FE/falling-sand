@@ -2,7 +2,6 @@ package cells;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Fire extends Cell
 {
@@ -10,7 +9,7 @@ public class Fire extends Cell
     long last_smoke;
     int moves;
 
-    int burn_time = 1500; // in ms
+    int burn_time = 500; // in ms
     long spawn_time;
 
     static final int SMOKE_SPAWN_COOLDOWN = 200; // in ms
@@ -63,7 +62,7 @@ public class Fire extends Cell
                         m.setCell(new Fire(target.x, target.y, ((Flammable) target).burn_time));
                 }
 
-                if (target.type == CellType.AIR)
+                if (target.type == CellType.AIR || target.type == CellType.SMOKE)
                     is_air = true;
         }
 
@@ -77,7 +76,7 @@ public class Fire extends Cell
         // Check if can rise
         if (this.y + 1 < m.height && timeDelta >= 300)
         {
-            Cell above = m.cells[this.y + 1][this.x];
+            Cell above = m.map[this.y + 1][this.x];
 
 //            if (above.type == CellType.AIR)
 //                m.swapCells(this, above);
@@ -94,7 +93,7 @@ public class Fire extends Cell
 
         if (this.y + 1 < m.height && timeDelta >= SMOKE_SPAWN_COOLDOWN)
         {
-            Cell above = m.cells[this.y + 1][this.x];
+            Cell above = m.map[this.y + 1][this.x];
 
             if (above.type == CellType.AIR)
                 m.setCell(new Smoke(above.x, above.y));
@@ -102,7 +101,7 @@ public class Fire extends Cell
             this.last_smoke = System.currentTimeMillis();
         }
 
-        this.updateColor();
+//        this.updateColor();
     }
 
     void setColor()
