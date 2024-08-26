@@ -3,11 +3,13 @@ package cells;
 import java.awt.*;
 import java.util.Random;
 
-public class Oil extends Cell
+public class Oil extends Flammable
 {
+    static final int BURN_TIME = 40000;
+
     public Oil(int x, int y)
     {
-        super(x, y, CellType.OIL);
+        super(x, y, CellType.OIL, BURN_TIME);
     }
 
     public void update(CellMap m) {

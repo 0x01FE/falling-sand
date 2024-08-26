@@ -10,16 +10,28 @@ public class Fire extends Cell
     long last_smoke;
     int moves;
 
-    static final int SMOKE_SPAWN_COOLDOWN = 200; // in ms
+    int burn_time = 1500; // in ms
+    long spawn_time;
 
-    public static final CellType[] FLAMMABLE_MATERIALS = { CellType.OIL };
+    static final int SMOKE_SPAWN_COOLDOWN = 200; // in ms
 
     public Fire(int x, int y)
     {
         super(x, y, CellType.FIRE);
         this.last_move = System.currentTimeMillis();
+        this.spawn_time = this.last_move;
         this.last_smoke = this.last_move;
         this.moves = 0;
+    }
+
+    public Fire(int x, int y, int burn_time)
+    {
+        super(x, y, CellType.FIRE);
+        this.last_move = System.currentTimeMillis();
+        this.spawn_time = this.last_move;
+        this.last_smoke = this.last_move;
+        this.moves = 0;
+        this.burn_time = burn_time;
     }
 
     public void update(CellMap m)
@@ -33,16 +45,14 @@ public class Fire extends Cell
 
         for (Cell target : neighbors)
         {
-            for (CellType material : FLAMMABLE_MATERIALS)
-            {
-                if (target.type == material)
+                if (target instanceof Flammable)
                 {
                     ArrayList<Cell> target_neighbors = m.getNeighbors(target);
                     boolean is_air_for_spread = false;
 
                     for (Cell target_neighbor : target_neighbors)
                     {
-                        if (target_neighbor.type == CellType.AIR)
+                        if (target_neighbor.type == CellType.AIR || target_neighbor.type == CellType.SMOKE)
                         {
                             is_air_for_spread = true;
                             break;
@@ -50,12 +60,11 @@ public class Fire extends Cell
                     }
 
                     if (is_air_for_spread)
-                        m.setCell(new Fire(target.x, target.y));
+                        m.setCell(new Fire(target.x, target.y, ((Flammable) target).burn_time));
                 }
 
                 if (target.type == CellType.AIR)
                     is_air = true;
-            }
         }
 
         // Flame dies out if no oxygen (air)
@@ -70,13 +79,10 @@ public class Fire extends Cell
         {
             Cell above = m.cells[this.y + 1][this.x];
 
-            if (above.type == CellType.AIR)
-                m.swapCells(this, above);
+//            if (above.type == CellType.AIR)
+//                m.swapCells(this, above);
 
-            Random rand = new Random();
-            int r = rand.nextInt(5);
-
-            if (r == 0)
+            if (current_time - this.spawn_time >= this.burn_time)
                 m.wipeCell(this);
 
             this.last_move = System.currentTimeMillis();
@@ -108,7 +114,12 @@ public class Fire extends Cell
     {
         this.setColor();
 
-        for (int i = 0; i < moves; i++)
+        int max = this.moves;
+
+        if (max > 2)
+            max = 2;
+
+        for (int i = 0; i < max; i++)
             this.color = this.color.darker();
     }
 }
