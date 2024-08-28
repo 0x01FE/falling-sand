@@ -27,7 +27,7 @@ public class Water extends Cell
 
         Cell under = m.getUnder(this);
 
-        if (under.type == CellType.AIR) {
+        if (under instanceof Air) {
             m.swapCells(this, under);
         }
 
@@ -42,16 +42,18 @@ public class Water extends Cell
             if (r == 1)
                 side *= -1;
 
+            boolean moved = false;
+
             for (int i = 0; i < 2; i++)
             {
-                if (!(this.x + side >= m.width || this.x + side < 0))
+                if (!(this.x + side >= m.width || this.x + side < 0) && !moved)
                 {
                     Cell side_cell = m.getCell(this.x + side, this.y);
 
-                    if (side_cell.type == CellType.AIR)
+                    if (side_cell instanceof Air)
                     {
                         m.swapCells(this, side_cell);
-                        return;
+                        moved = true;
                     }
                 }
                 side *= -1;
@@ -71,7 +73,7 @@ public class Water extends Cell
         int water_neighbors = 0;
 
         for (Cell c : cells)
-            if (c.type == CellType.WATER)
+            if (c instanceof Water)
                 water_neighbors++;
 
         for (int i = 0; i < water_neighbors / 2; i++)

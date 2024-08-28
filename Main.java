@@ -17,7 +17,7 @@ public class Main
     static final int CELL_MAP_WIDTH = WIDTH / CELL_SIZE;
 
     // TPS / FPS
-    static final int TARGET_TPS = 90;
+    static final int TARGET_TPS = 4;
     static final int TARGET_FPS = 60;
 
 
@@ -142,6 +142,7 @@ public class Main
 
         int frames = 0;
         double fps = 0;
+        boolean text = true;
 
         while (true)
         {
@@ -157,9 +158,16 @@ public class Main
 
             if (frameDelta > 1000)
             {
+                if (text)
+                {
+                    clearConsole();
+                    text = false;
+                }
+
                 fps = frames / (frameDelta/1000);
 
                 System.out.println("FPS: " + fps);
+                text = true;
                 frames = 0;
                 frameStartTime = System.currentTimeMillis();
             }
@@ -199,11 +207,31 @@ public class Main
         float x_translate = (float) WIDTH / (CELL_MAP_WIDTH - 1);
         float y_translate = (float) HEIGHT / (CELL_MAP_HEIGHT - 1);
 
-        Point ans = new Point(Math.round(p.x / x_translate), CELL_MAP_HEIGHT - Math.round(p.y / y_translate));
+        return new Point(Math.round(p.x / x_translate), CELL_MAP_HEIGHT - Math.round(p.y / y_translate));
+    }
 
-//        System.out.println("Translated Point (" + ans.x + ", " + ans.y + ")");
+    public static void clearConsole()
+    {
+        try
+        {
+            final String os = System.getProperty("os.name");
 
-        return ans;
+            if (os.contains("Windows"))
+            {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            }
+            else
+            {
+                Runtime.getRuntime().exec("clear");
+            }
+
+            System.out.println("PROGRAM STATS:");
+        }
+        catch (final Exception e)
+        {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
 }
