@@ -76,7 +76,7 @@ public class Fire extends Cell
         // Check if can rise
         if (this.y + 1 < m.height && timeDelta >= 300)
         {
-            Cell above = m.map[this.y + 1][this.x];
+            Cell above = m.getCell(this.x, this.y + 1);
 
 //            if (above.type == CellType.AIR)
 //                m.swapCells(this, above);
@@ -93,7 +93,7 @@ public class Fire extends Cell
 
         if (this.y + 1 < m.height && timeDelta >= SMOKE_SPAWN_COOLDOWN)
         {
-            Cell above = m.map[this.y + 1][this.x];
+            Cell above = m.getCell(this.x, this.y + 1);
 
             if (above.type == CellType.AIR)
                 m.setCell(new Smoke(above.x, above.y));

@@ -34,7 +34,7 @@ public class Oil extends Flammable
 
             for (int i = 0; i < 2; i++) {
                 if (!(this.x + side >= m.width || this.x + side < 0)) {
-                    Cell side_cell = m.map[this.y][this.x + side];
+                    Cell side_cell = m.getCell(this.x + side, this.y);
 
                     if (side_cell.type == CellType.AIR) {
                         m.swapCells(this, side_cell);

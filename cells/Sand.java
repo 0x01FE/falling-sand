@@ -42,7 +42,7 @@ public class Sand extends Cell
             {
                 if (!(this.x + side >= m.width || this.x + side < 0))
                 {
-                    Cell side_cell = m.map[this.y - 1][this.x + side];
+                    Cell side_cell = m.getCell(this.x + side, this.y - 1);
 
                     if (side_cell.type == CellType.AIR)
                     {

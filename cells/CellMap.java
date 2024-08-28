@@ -10,8 +10,9 @@ public class CellMap
     public int height;
     public int width;
 
-    Cell[][] map;
-    Cell[][] buffer;
+    private Cell[][] map;
+    public Cell[][] buffer;
+
     public Point mouse;
     public boolean mouse_pressed;
     public CellType cursor_type;
@@ -23,7 +24,9 @@ public class CellMap
         this.height = h;
         this.width = w;
         this.cell_size = cell_size;
+
         this.map = new Cell[h][w];
+        this.buffer = new Cell[h][w];
 
         this.mouse_pressed = false;
         this.cursor_type = CellType.SAND;
@@ -45,9 +48,15 @@ public class CellMap
             y++;
         }
     }
+
+    public Cell getCell(int x, int y)
+    {
+        return this.map[y][x];
+    }
+
     public void wipeCell(Cell c)
     {
-        this.map[c.y][c.x] = new Air(c.x, c.y);
+        this.buffer[c.y][c.x] = new Air(c.x, c.y);
     }
 
     public void setCell(Cell c)
@@ -55,7 +64,7 @@ public class CellMap
         if (c.x >= this.width || c.y >= this.height || c.y < 0 || c.x < 0)
             return;
 
-        this.map[c.y][c.x] = c;
+        this.buffer[c.y][c.x] = c;
     }
 
     public void swapCells(Cell c1, Cell c2)
@@ -169,6 +178,8 @@ public class CellMap
                 cell.update(this);
             }
         }
+
+        this.map = this.buffer;
     }
 
     public Cell getUnder(Cell c)

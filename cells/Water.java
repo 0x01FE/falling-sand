@@ -46,7 +46,7 @@ public class Water extends Cell
             {
                 if (!(this.x + side >= m.width || this.x + side < 0))
                 {
-                    Cell side_cell = m.map[this.y][this.x + side];
+                    Cell side_cell = m.getCell(this.x + side, this.y);
 
                     if (side_cell.type == CellType.AIR)
                     {
