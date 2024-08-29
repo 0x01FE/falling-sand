@@ -18,6 +18,8 @@ interfere with other cells.
 
 public class Water extends Cell
 {
+    static Random rand = new Random();
+
     public Water(int x, int y) { super(x, y, CellType.WATER); }
 
     public void update(CellMap m)
@@ -35,11 +37,11 @@ public class Water extends Cell
         else
         {
             int side = 1;
-            Random rand = new Random();
+//            Random rand = new Random();
 
-            int r = rand.nextInt(2);
+//            int r = rand.nextInt(2);
 
-            if (r == 1)
+            if (this.rand.nextBoolean())
                 side *= -1;
 
             boolean moved = false;

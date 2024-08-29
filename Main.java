@@ -16,14 +16,14 @@ public class Main
     static final int CELL_MAP_HEIGHT = HEIGHT / CELL_SIZE;
     static final int CELL_MAP_WIDTH = WIDTH / CELL_SIZE;
 
-    // TPS / FPS
-    static final int TARGET_TPS = 4;
+    // FPS
     static final int TARGET_FPS = 60;
 
 
     public static void main(String[] args)
     {
         CellMap m = new CellMap(CELL_MAP_HEIGHT, CELL_MAP_WIDTH, CELL_SIZE);
+        int TARGET_TPS = 90;
         m.setCell(new Sand(50, 40));
 
         JFrame frame = new JFrame();
