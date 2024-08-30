@@ -206,6 +206,16 @@ public class CellMap
                     // System.out.println("Filling rect with " + (cell.x * CELL_SIZE) + ", " + (renderingPanel.getHeight() - (cell.y * CELL_SIZE)));
 //                    System.out.println(cell.x + " * " + CELL_SIZE);
                     g2.fillRect(cell.x * this.cell_size, (renderingPanel.getHeight() - (cell.y * this.cell_size)) - this.cell_size, this.cell_size, this.cell_size);
+
+//                    if (cell instanceof Water)
+//                    {
+//                        JLabel mass = new JLabel(String.valueOf(((Water) cell).mass));
+//                        mass.setForeground(Color.WHITE);
+//
+//                        mass.setMaximumSize(new Dimension(this.cell_size, this.cell_size));
+//
+//                        renderingPanel.add(mass);
+//                    }
                 }
             }
         }
