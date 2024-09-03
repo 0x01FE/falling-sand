@@ -49,20 +49,37 @@ public class Water extends Fluid
             flowInto(m, under);
         }
 
-        // Check Left
-        if (this.x - 1 >= 0 && this.mass > 0)
+        int r = rand.nextInt(2);
+        if (r == 1)
         {
-            Cell left = m.getCell(this.x - 1, this.y);
-            flowInto(m, left);
+            // Check Left
+            if (this.x - 1 >= 0 && this.mass > 0)
+            {
+                Cell left = m.getCell(this.x - 1, this.y);
+                flowInto(m, left);
+            }
+            // Check Right
+            if (this.x + 1 < m.width && this.mass > 0)
+            {
+                Cell right = m.getCell(this.x + 1, this.y);
+                flowInto(m, right);
+            }
         }
-
-        // Check Right
-        if (this.x + 1 < m.width && this.mass > 0)
+        else
         {
-            Cell right = m.getCell(this.x + 1, this.y);
-            flowInto(m, right);
+            // Check Right
+            if (this.x + 1 < m.width && this.mass > 0)
+            {
+                Cell right = m.getCell(this.x + 1, this.y);
+                flowInto(m, right);
+            }
+            // Check Left
+            if (this.x - 1 >= 0 && this.mass > 0)
+            {
+                Cell left = m.getCell(this.x - 1, this.y);
+                flowInto(m, left);
+            }
         }
-
 
         // Up, if pressure (compressed)
         if (this.y + 1 < m.height && this.mass > 0)
@@ -112,8 +129,18 @@ public class Water extends Fluid
             // If it doesn't all fit, return the difference as flow
             else
             {
-                return MAX_COMPRESS - (bottom_mass + top_mass);
+                return (bottom_mass + top_mass) - MAX_COMPRESS;
             }
+        }
+        // If bottom mass is full, don't flow into it.
+        else if (bottom_mass == MAX_COMPRESS)
+        {
+            return 0;
+        }
+        // If the bottom block is over max compression, try to flow up.
+        else
+        {
+            return MAX_COMPRESS - bottom_mass;
         }
     }
 
@@ -150,13 +177,16 @@ public class Water extends Fluid
         else
             flow = flowIntoSide(other);
 
-        if (flow > MIN_FLOW)
-            flow /= 2;
+//        if (flow > MIN_FLOW)
+//            flow /= 2;
 
-        if (vertical)
-            flow = constrain(flow, 0, Math.min(MAX_SPEED, this.mass));
-        else
-            flow = constrain(flow, 0, this.mass);
+//        if (vertical)
+//            flow = constrain(flow, 0, Math.min(MAX_SPEED, this.mass));
+//        else
+//            flow = constrain(flow, 0, this.mass);
+
+        if (flow == 0)
+            return;
 
 
         ((Fluid) m.buffer[this.y][this.x]).mass -= flow;
@@ -188,8 +218,8 @@ public class Water extends Fluid
     int flowIntoSide(Cell other)
     {
         if (other instanceof Fluid)
-            return (this.mass - ((Fluid) other).mass) / 4;
-        return (this.mass) / 4;
+            return (this.mass - ((Fluid) other).mass) / 2;
+        return (this.mass) / 2;
     }
 
 }

@@ -16,6 +16,8 @@ public class Main
     static final int CELL_MAP_HEIGHT = HEIGHT / CELL_SIZE;
     static final int CELL_MAP_WIDTH = WIDTH / CELL_SIZE;
 
+    static final boolean DEBUG_MODE = !false;
+
     // FPS
     static final int TARGET_FPS = 60;
 
@@ -39,7 +41,7 @@ public class Main
                 g2.setColor(Color.BLACK);
                 g2.fillRect(0, 0, getWidth(), getHeight());
 
-                m.draw(g2, this);
+                m.draw(g2, this, DEBUG_MODE);
             }
         };
 

@@ -187,7 +187,7 @@ public class CellMap
         return this.map[c.y - 1][c.x];
     }
 
-    public void draw(Graphics g2, JPanel renderingPanel)
+    public void draw(Graphics g2, JPanel renderingPanel, boolean debug_mode)
     {
         // System.out.println("cw " + this.width);
         // System.out.println("w " + renderingPanel.getWidth());
@@ -208,10 +208,14 @@ public class CellMap
                     int draw_x = cell.x * this.cell_size;
                     int draw_y = (renderingPanel.getHeight() - (cell.y * this.cell_size)) - this.cell_size;
 
-//                    g2.setColor(cell.color);
-//                    g2.fillRect(draw_x, draw_y, this.cell_size, this.cell_size);
+                    if (!debug_mode)
+                    {
+                        g2.setColor(cell.color);
+                        g2.fillRect(draw_x, draw_y, this.cell_size, this.cell_size);
+                    }
 
-                    if (cell instanceof Water)
+
+                    if (cell instanceof Water && debug_mode)
                     {
                         g2.setColor(new Color(255, 255, 255));
                         g2.drawString(String.valueOf(((Water) cell).mass), draw_x, draw_y);
