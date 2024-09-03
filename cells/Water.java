@@ -1,7 +1,6 @@
 package cells;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Random;
 
 /*
@@ -20,14 +19,15 @@ public class Water extends Fluid
 {
     static Random rand = new Random();
     static final int MAX_MASS = 100;
-    static final int MAX_COMPRESS = 2;
+    static final int MAX_COMPRESS = 150;
     static final int MIN_MASS = 1;
     static final int MIN_FLOW = 1;
     static final int MAX_SPEED = 100;
+    static final int DEFAULT_MASS = 100;
 
     public Water(int x, int y)
     {
-        super(x, y, CellType.WATER, 100);
+        super(x, y, CellType.WATER, DEFAULT_MASS);
     }
 
     public Water(int x, int y, int m)
@@ -92,19 +92,28 @@ public class Water extends Fluid
         }
     }
 
-    int get_stable_state_b(int total_mass)
+    /*
+    * The method will return an integer between -something and MAX_MASS
+    *
+    * Where negative integers represent flowing upwards do to mass being over max compression.
+    *
+    * The method is passed the mass of a top and bottom cell.
+    */
+    int get_stable_vertical_state(int top_mass, int bottom_mass)
     {
-        if (total_mass <= 1)
+        // Typically we want to flow down, if we can
+        if (bottom_mass < MAX_COMPRESS)
         {
-            return 1;
-        }
-        else if (total_mass < 2 * MAX_MASS + MAX_COMPRESS)
-        {
-            return (MAX_MASS * MAX_MASS + total_mass * MAX_COMPRESS)/(MAX_MASS / MAX_COMPRESS);
-        }
-        else
-        {
-            return (total_mass + MAX_COMPRESS) / 2;
+            // If we can fit everything from the top in the bottom cell, have it flow!
+            if (bottom_mass + top_mass <= MAX_COMPRESS)
+            {
+                return top_mass;
+            }
+            // If it doesn't all fit, return the difference as flow
+            else
+            {
+                return MAX_COMPRESS - (bottom_mass + top_mass);
+            }
         }
     }
 
@@ -165,15 +174,15 @@ public class Water extends Fluid
     int flowIntoAbove(Cell other)
     {
         if (other instanceof Fluid)
-            return this.mass - get_stable_state_b(this.mass + ((Fluid) other).mass);
-        return this.mass - get_stable_state_b(this.mass);
+            return this.mass - get_stable_vertical_state(((Fluid) other).mass, this.mass);
+        return this.mass - get_stable_vertical_state(0, this.mass);
     }
 
     int flowIntoBellow(Cell other)
     {
         if (other instanceof Fluid)
-            return get_stable_state_b(this.mass + ((Fluid) other).mass);
-        return get_stable_state_b(this.mass);
+            return get_stable_vertical_state(this.mass, ((Fluid) other).mass);
+        return get_stable_vertical_state(this.mass, 0);
     }
 
     int flowIntoSide(Cell other)
