@@ -19,25 +19,29 @@ interfere with other cells.
 public class Water extends Fluid
 {
     static Random rand = new Random();
-    static final float MAX_MASS = 1.0f;
-    static final float MAX_COMPRESS = 0.02f;
-    static final float MIN_MASS = 0.0001f;
-    static final float MIN_FLOW = 0.01f;
-    static final float MAX_SPEED = 1.0f;
+    static final int MAX_MASS = 100;
+    static final int MAX_COMPRESS = 2;
+    static final int MIN_MASS = 1;
+    static final int MIN_FLOW = 1;
+    static final int MAX_SPEED = 100;
 
     public Water(int x, int y)
     {
-        super(x, y, CellType.WATER, 1.0f);
+        super(x, y, CellType.WATER, 100);
     }
 
-    public Water(int x, int y, float m)
+    public Water(int x, int y, int m)
     {
         super(x, y, CellType.WATER, m);
     }
 
     public void update(CellMap m)
     {
-        float flow = 0;
+        if (this.mass <= MIN_MASS)
+        {
+            m.wipeCell(this);
+            return;
+        }
 
         if (this.y - 1 >= 0)
         {
@@ -88,7 +92,7 @@ public class Water extends Fluid
         }
     }
 
-    float get_stable_state_b(float total_mass)
+    int get_stable_state_b(int total_mass)
     {
         if (total_mass <= 1)
         {
@@ -104,20 +108,20 @@ public class Water extends Fluid
         }
     }
 
-    float constrain(float amt, float low, float high)
+    int constrain(int amt, int low, int high)
     {
         return Math.max(Math.min(amt, high), low);
     }
 
     void flowInto(CellMap m, Cell other)
     {
-        if (this.mass <= 0)
+        if (this.mass <= MIN_MASS)
         {
             m.wipeCell(this);
             return;
         }
 
-        float flow;
+        int flow;
         boolean vertical = false;
 
         if (!(other instanceof Fluid || other instanceof Air))
@@ -138,7 +142,7 @@ public class Water extends Fluid
             flow = flowIntoSide(other);
 
         if (flow > MIN_FLOW)
-            flow *= 0.5;
+            flow /= 2;
 
         if (vertical)
             flow = constrain(flow, 0, Math.min(MAX_SPEED, this.mass));
@@ -154,25 +158,25 @@ public class Water extends Fluid
 
         this.mass -= flow;
 
-        if (this.mass <= 0)
+        if (this.mass <= MIN_MASS)
             m.wipeCell(this);
     }
 
-    float flowIntoAbove(Cell other)
+    int flowIntoAbove(Cell other)
     {
         if (other instanceof Fluid)
             return this.mass - get_stable_state_b(this.mass + ((Fluid) other).mass);
         return this.mass - get_stable_state_b(this.mass);
     }
 
-    float flowIntoBellow(Cell other)
+    int flowIntoBellow(Cell other)
     {
         if (other instanceof Fluid)
             return get_stable_state_b(this.mass + ((Fluid) other).mass);
         return get_stable_state_b(this.mass);
     }
 
-    float flowIntoSide(Cell other)
+    int flowIntoSide(Cell other)
     {
         if (other instanceof Fluid)
             return (this.mass - ((Fluid) other).mass) / 4;

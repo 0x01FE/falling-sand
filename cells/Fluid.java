@@ -4,9 +4,9 @@ import java.awt.*;
 
 public class Fluid extends Cell
 {
-    public float mass;
+    public int mass;
 
-    public Fluid(int x, int y, CellType type, float m)
+    public Fluid(int x, int y, CellType type, int m)
     {
         super(x, y, type);
         this.mass = m;

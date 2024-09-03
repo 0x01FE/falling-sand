@@ -11,7 +11,7 @@ public class Main
 {
     static final int HEIGHT = 480 * 2;
     static final int WIDTH = 640 * 2;
-    public static final int CELL_SIZE = 12; // IN PIXELS
+    public static final int CELL_SIZE = 24; // IN PIXELS
 
     static final int CELL_MAP_HEIGHT = HEIGHT / CELL_SIZE;
     static final int CELL_MAP_WIDTH = WIDTH / CELL_SIZE;

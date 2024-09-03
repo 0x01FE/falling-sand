@@ -192,7 +192,8 @@ public class CellMap
         // System.out.println("cw " + this.width);
         // System.out.println("w " + renderingPanel.getWidth());
 //        System.out.println(CELL_SIZE);
-    
+
+        g2.setFont(new Font("TimesRoman", Font.PLAIN, this.cell_size/3));
 
         for (Cell[] row : this.map)
         {
@@ -201,21 +202,21 @@ public class CellMap
                 if (cell != null)
                 {
                     // System.out.println("Drawing sand!");
-                    g2.setColor(cell.color);
 
                     // System.out.println("Filling rect with " + (cell.x * CELL_SIZE) + ", " + (renderingPanel.getHeight() - (cell.y * CELL_SIZE)));
 //                    System.out.println(cell.x + " * " + CELL_SIZE);
-                    g2.fillRect(cell.x * this.cell_size, (renderingPanel.getHeight() - (cell.y * this.cell_size)) - this.cell_size, this.cell_size, this.cell_size);
+                    int draw_x = cell.x * this.cell_size;
+                    int draw_y = (renderingPanel.getHeight() - (cell.y * this.cell_size)) - this.cell_size;
 
-//                    if (cell instanceof Water)
-//                    {
-//                        JLabel mass = new JLabel(String.valueOf(((Water) cell).mass));
-//                        mass.setForeground(Color.WHITE);
-//
-//                        mass.setMaximumSize(new Dimension(this.cell_size, this.cell_size));
-//
-//                        renderingPanel.add(mass);
-//                    }
+//                    g2.setColor(cell.color);
+//                    g2.fillRect(draw_x, draw_y, this.cell_size, this.cell_size);
+
+                    if (cell instanceof Water)
+                    {
+                        g2.setColor(new Color(255, 255, 255));
+                        g2.drawString(String.valueOf(((Water) cell).mass), draw_x, draw_y);
+                    }
+
                 }
             }
         }
