@@ -18,21 +18,28 @@ interfere with other cells.
 public class Water extends Fluid
 {
     static Random rand = new Random();
-    static final int MAX_MASS = 100;
-    static final int MAX_COMPRESS = 150;
+    static final int MAX_MASS = 9;
+//    static final int MAX_COMPRESS = 150;
     static final int MIN_MASS = 1;
     static final int MIN_FLOW = 1;
     static final int MAX_SPEED = 100;
-    static final int DEFAULT_MASS = 100;
+    static final int DEFAULT_MASS = 9;
+
+    int x_pressure;
+    int y_pressure;
 
     public Water(int x, int y)
     {
         super(x, y, CellType.WATER, DEFAULT_MASS);
+        this.x_pressure = 0;
+        this.y_pressure = 0;
     }
 
     public Water(int x, int y, int m)
     {
         super(x, y, CellType.WATER, m);
+        this.x_pressure = 0;
+        this.y_pressure = 0;
     }
 
     public void update(CellMap m)
@@ -43,10 +50,28 @@ public class Water extends Fluid
             return;
         }
 
+        // Flow Down
         if (this.y - 1 >= 0)
         {
+            int flow;
+
             Cell under = m.getUnder(this);
-            flowInto(m, under);
+            if (under instanceof Fluid)
+            {
+                int under_mass = ((Fluid) under).mass;
+                if (under_mass + this.mass > MAX_MASS)
+                {
+                    flow = MAX_MASS - under_mass;
+                }
+                else
+                {
+                    flow = this.mass;
+                }
+            }
+            else if (under instanceof Air)
+            {
+                
+            }
         }
 
         int r = rand.nextInt(2);
@@ -149,56 +174,15 @@ public class Water extends Fluid
         return Math.max(Math.min(amt, high), low);
     }
 
-    void flowInto(CellMap m, Cell other)
+    void flowInto(CellMap m, Cell other, int flow)
     {
-        if (this.mass <= MIN_MASS)
-        {
-            m.wipeCell(this);
-            return;
-        }
-
-        int flow;
-        boolean vertical = false;
-
-        if (!(other instanceof Fluid || other instanceof Air))
-            return;
-
-        if(this.y - other.y > 0)
-        {
-            flow = flowIntoBellow(other);
-            vertical = true;
-        }
-        else if (this.y - other.y < 0)
-        {
-            flow = flowIntoAbove(other);
-//            System.out.println("Flowing up FLOW: " + flow);
-            vertical = true;
-        }
-        else
-            flow = flowIntoSide(other);
-
-//        if (flow > MIN_FLOW)
-//            flow /= 2;
-
-//        if (vertical)
-//            flow = constrain(flow, 0, Math.min(MAX_SPEED, this.mass));
-//        else
-//            flow = constrain(flow, 0, this.mass);
-
-        if (flow == 0)
-            return;
-
-
-        ((Fluid) m.buffer[this.y][this.x]).mass -= flow;
         if (other instanceof Fluid)
-            ((Fluid) m.buffer[other.y][other.x]).mass += flow;
-        else if (other instanceof Air)
+            ((Fluid) m.buffer[other.x][other.y]).mass += flow;
+        else
             m.setCell(new Water(other.x, other.y, flow));
 
+        ((Fluid) m.buffer[this.x][this.y]).mass -= flow;
         this.mass -= flow;
-
-        if (this.mass <= MIN_MASS)
-            m.wipeCell(this);
     }
 
     int flowIntoAbove(Cell other)
@@ -217,9 +201,13 @@ public class Water extends Fluid
 
     int flowIntoSide(Cell other)
     {
+        int flow;
         if (other instanceof Fluid)
-            return (this.mass - ((Fluid) other).mass) / 2;
-        return (this.mass) / 2;
+            flow =  (this.mass - ((Fluid) other).mass) / 4;
+        else
+            flow = (this.mass) / 4;
+
+        return constrain(flow, 0, this.mass);
     }
 
 }
