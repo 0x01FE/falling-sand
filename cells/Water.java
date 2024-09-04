@@ -44,74 +44,45 @@ public class Water extends Fluid
 
     public void update(CellMap m)
     {
-        if (this.mass <= MIN_MASS)
+        if (this.mass < MIN_MASS)
         {
             m.wipeCell(this);
             return;
         }
 
         // Flow Down
-        if (this.y - 1 >= 0)
-        {
-            int flow;
+        flowIntoBellow(m);
 
-            Cell under = m.getUnder(this);
-            if (under instanceof Fluid)
-            {
-                int under_mass = ((Fluid) under).mass;
-                if (under_mass + this.mass > MAX_MASS)
-                {
-                    flow = MAX_MASS - under_mass;
-                }
-                else
-                {
-                    flow = this.mass;
-                }
-            }
-            else if (under instanceof Air)
-            {
-                
-            }
+        if (this.mass < MIN_MASS)
+        {
+            m.wipeCell(this);
+            return;
         }
 
+        // Flow to sides
         int r = rand.nextInt(2);
+        int side = 1;
+
         if (r == 1)
+            side *= -1;
+
+        flowIntoSide(m, side);
+
+        if (this.mass < MIN_MASS)
         {
-            // Check Left
-            if (this.x - 1 >= 0 && this.mass > 0)
-            {
-                Cell left = m.getCell(this.x - 1, this.y);
-                flowInto(m, left);
-            }
-            // Check Right
-            if (this.x + 1 < m.width && this.mass > 0)
-            {
-                Cell right = m.getCell(this.x + 1, this.y);
-                flowInto(m, right);
-            }
-        }
-        else
-        {
-            // Check Right
-            if (this.x + 1 < m.width && this.mass > 0)
-            {
-                Cell right = m.getCell(this.x + 1, this.y);
-                flowInto(m, right);
-            }
-            // Check Left
-            if (this.x - 1 >= 0 && this.mass > 0)
-            {
-                Cell left = m.getCell(this.x - 1, this.y);
-                flowInto(m, left);
-            }
+            m.wipeCell(this);
+            return;
         }
 
-        // Up, if pressure (compressed)
-        if (this.y + 1 < m.height && this.mass > 0)
+        side *= -1;
+        flowIntoSide(m ,side);
+
+        if (this.mass < MIN_MASS)
         {
-            Cell above = m.getCell(this.x, this.y + 1);
-            flowInto(m, above);
+            m.wipeCell(this);
         }
+
+        // Should we flow up?
 
 //        this.updateColor();
     }
@@ -134,80 +105,81 @@ public class Water extends Fluid
         }
     }
 
-    /*
-    * The method will return an integer between -something and MAX_MASS
-    *
-    * Where negative integers represent flowing upwards do to mass being over max compression.
-    *
-    * The method is passed the mass of a top and bottom cell.
-    */
-    int get_stable_vertical_state(int top_mass, int bottom_mass)
-    {
-        // Typically we want to flow down, if we can
-        if (bottom_mass < MAX_COMPRESS)
-        {
-            // If we can fit everything from the top in the bottom cell, have it flow!
-            if (bottom_mass + top_mass <= MAX_COMPRESS)
-            {
-                return top_mass;
-            }
-            // If it doesn't all fit, return the difference as flow
-            else
-            {
-                return (bottom_mass + top_mass) - MAX_COMPRESS;
-            }
-        }
-        // If bottom mass is full, don't flow into it.
-        else if (bottom_mass == MAX_COMPRESS)
-        {
-            return 0;
-        }
-        // If the bottom block is over max compression, try to flow up.
-        else
-        {
-            return MAX_COMPRESS - bottom_mass;
-        }
-    }
-
-    int constrain(int amt, int low, int high)
-    {
-        return Math.max(Math.min(amt, high), low);
-    }
 
     void flowInto(CellMap m, Cell other, int flow)
     {
         if (other instanceof Fluid)
-            ((Fluid) m.buffer[other.x][other.y]).mass += flow;
+            ((Fluid) m.buffer[other.y][other.x]).mass += flow;
         else
             m.setCell(new Water(other.x, other.y, flow));
 
-        ((Fluid) m.buffer[this.x][this.y]).mass -= flow;
+//        ((Fluid) m.buffer[this.x][this.y]).mass -= flow;
+        m.setCell(new Water(this.x, this.y, this.mass - flow));
         this.mass -= flow;
     }
 
-    int flowIntoAbove(Cell other)
+//    int flowIntoAbove(Cell other)
+//    {
+//        if (other instanceof Fluid)
+//            return this.mass - get_stable_vertical_state(((Fluid) other).mass, this.mass);
+//        return this.mass - get_stable_vertical_state(0, this.mass);
+//    }
+
+    void flowIntoBellow(CellMap m)
     {
-        if (other instanceof Fluid)
-            return this.mass - get_stable_vertical_state(((Fluid) other).mass, this.mass);
-        return this.mass - get_stable_vertical_state(0, this.mass);
+        // Don't flow out of bounds
+        if (this.y - 1 < 0)
+            return;
+
+        int flow = 0;
+
+        Cell under = m.getUnder(this);
+        if (under instanceof Fluid)
+        {
+            int under_mass = ((Fluid) under).mass;
+            if (under_mass + this.mass > MAX_MASS)
+            {
+                flow = MAX_MASS - under_mass;
+            }
+            else
+            {
+                flow = this.mass;
+            }
+        }
+        // TODO @0x01FE : make that density system you keep thinking about
+        else if (under instanceof Air)
+        {
+            flow = this.mass;
+        }
+
+
+        if (flow != 0)
+            flowInto(m, under, flow);
     }
 
-    int flowIntoBellow(Cell other)
+    void flowIntoSide(CellMap m, int side)
     {
-        if (other instanceof Fluid)
-            return get_stable_vertical_state(this.mass, ((Fluid) other).mass);
-        return get_stable_vertical_state(this.mass, 0);
-    }
+        int flow = 0;
 
-    int flowIntoSide(Cell other)
-    {
-        int flow;
-        if (other instanceof Fluid)
-            flow =  (this.mass - ((Fluid) other).mass) / 4;
-        else
-            flow = (this.mass) / 4;
+        // If out of bounds do nothing
+        if (this.x + side < 0 || this.x + side >= m.width)
+            return;
 
-        return constrain(flow, 0, this.mass);
+        Cell side_cell = m.getCell(this.x + side, this.y);
+
+        if (side_cell instanceof Fluid)
+        {
+            int side_cell_mass = ((Fluid) side_cell).mass;
+            flow = this.mass - ((side_cell_mass + this.mass) / 2);
+        }
+        else if (side_cell instanceof Air)
+        {
+            flow = this.mass - (this.mass / 2);
+        }
+
+        if (flow != 0)
+            flowInto(m, side_cell, flow);
+
     }
 
 }

@@ -192,8 +192,7 @@ public class CellMap
         // System.out.println("cw " + this.width);
         // System.out.println("w " + renderingPanel.getWidth());
 //        System.out.println(CELL_SIZE);
-
-        g2.setFont(new Font("TimesRoman", Font.PLAIN, this.cell_size/3));
+    
 
         for (Cell[] row : this.map)
         {

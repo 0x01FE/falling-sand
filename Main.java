@@ -16,7 +16,7 @@ public class Main
     static final int CELL_MAP_HEIGHT = HEIGHT / CELL_SIZE;
     static final int CELL_MAP_WIDTH = WIDTH / CELL_SIZE;
 
-    static final boolean DEBUG_MODE = !false;
+    static final boolean DEBUG_MODE = false;
 
     // FPS
     static final int TARGET_FPS = 60;
