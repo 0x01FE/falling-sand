@@ -208,24 +208,37 @@ public class Water extends Fluid
         Cell above = m.getCell(this.x, this.y + 1);
 
         if (above instanceof Water)
-            this.pressure = ((Water) above).pressure + 1;
+            if (((Water) above).pressure + 1 > this.pressure)
+                this.pressure = ((Water) above).pressure + 1;
 
-        // Check right
+
+        // If the cell cannot exert its pressure under it, exert it to the sides.
+        if (this.y - 1 < 0)
+            return;
+
+        Cell under = m.getUnder(this);
+
+        if (under instanceof Water)
+            return;
+
+
+        // Right Side
         if (this.x + 1 < m.width)
         {
             Cell side_cell = m.getCell(this.x + 1, this.y);
+
             if (side_cell instanceof Water)
-                if (((Water) side_cell).pressure > this.pressure)
-                    this.pressure = ((Water) side_cell).pressure;
+                if (((Water) side_cell).pressure < this.pressure)
+                    ((Water) side_cell).pressure = this.pressure;
         }
 
-        // Check left
+        // Left side
         if (this.x - 1 > 0)
         {
             Cell side_cell = m.getCell(this.x - 1, this.y);
             if (side_cell instanceof Water)
-                if (((Water) side_cell).pressure > this.pressure)
-                    this.pressure = ((Water) side_cell).pressure;
+                if (((Water) side_cell).pressure < this.pressure)
+                    ((Water) side_cell).pressure = this.pressure;
         }
 
 

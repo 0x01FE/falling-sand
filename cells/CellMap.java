@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class CellMap
 {
     public boolean PRESSURE_DEBUG = true;
+    public boolean SHOW_BLOCKS = true;
 
     public int height;
     public int width;
@@ -220,17 +221,17 @@ public class CellMap
                         if (PRESSURE_DEBUG)
                         {
                             g2.setColor(new Color(255, 255, 255));
-                            g2.drawString(String.valueOf(((Water) cell).pressure), draw_x, draw_y);
+                            g2.drawString(String.valueOf(((Water) cell).pressure), draw_x, draw_y + cell_size);
                         }
 
-                        if (!debug_mode && !PRESSURE_DEBUG)
+                        if (!debug_mode && !PRESSURE_DEBUG && SHOW_BLOCKS)
                         {
                             g2.setColor(cell.color);
                             g2.fillRect(draw_x, draw_y, this.cell_size, this.cell_size);
                         }
 
                     }
-                    else
+                    else if (SHOW_BLOCKS)
                     {
                         g2.setColor(cell.color);
                         g2.fillRect(draw_x, draw_y, this.cell_size, this.cell_size);
