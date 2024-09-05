@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class CellMap
 {
+    public boolean PRESSURE_DEBUG = true;
 
     public int height;
     public int width;
@@ -207,17 +208,32 @@ public class CellMap
                     int draw_x = cell.x * this.cell_size;
                     int draw_y = (renderingPanel.getHeight() - (cell.y * this.cell_size)) - this.cell_size;
 
-                    if (!debug_mode)
+
+                    if (cell instanceof Water)
+                    {
+                        if (debug_mode)
+                        {
+                            g2.setColor(new Color(255, 255, 255));
+                            g2.drawString(String.valueOf(((Water) cell).mass), draw_x, draw_y);
+                        }
+
+                        if (PRESSURE_DEBUG)
+                        {
+                            g2.setColor(new Color(255, 255, 255));
+                            g2.drawString(String.valueOf(((Water) cell).pressure), draw_x, draw_y);
+                        }
+
+                        if (!debug_mode && !PRESSURE_DEBUG)
+                        {
+                            g2.setColor(cell.color);
+                            g2.fillRect(draw_x, draw_y, this.cell_size, this.cell_size);
+                        }
+
+                    }
+                    else
                     {
                         g2.setColor(cell.color);
                         g2.fillRect(draw_x, draw_y, this.cell_size, this.cell_size);
-                    }
-
-
-                    if (cell instanceof Water && debug_mode)
-                    {
-                        g2.setColor(new Color(255, 255, 255));
-                        g2.drawString(String.valueOf(((Water) cell).mass), draw_x, draw_y);
                     }
 
                 }

@@ -25,21 +25,17 @@ public class Water extends Fluid
     static final int MAX_SPEED = 100;
     static final int DEFAULT_MASS = 9;
 
-    int x_pressure;
-    int y_pressure;
+    // Ranges from 0 to 10
+    int pressure = 0;
 
     public Water(int x, int y)
     {
         super(x, y, CellType.WATER, DEFAULT_MASS);
-        this.x_pressure = 0;
-        this.y_pressure = 0;
     }
 
     public Water(int x, int y, int m)
     {
         super(x, y, CellType.WATER, m);
-        this.x_pressure = 0;
-        this.y_pressure = 0;
     }
 
     public void update(CellMap m)
@@ -83,6 +79,24 @@ public class Water extends Fluid
         }
 
         // Should we flow up?
+        if (this.y + 1 < m.height)
+        {
+            this.calculatePressure(m);
+
+            Cell above = m.getCell(this.x, this.y + 1);
+
+            if (this.pressure > 3 && above instanceof Air)
+            {
+                int flow = this.pressure;
+
+                if (flow > this.mass)
+                {
+                    flow = this.mass;
+                }
+
+                this.flowInto(m, above, flow);
+            }
+        }
 
 //        this.updateColor();
     }
@@ -109,7 +123,13 @@ public class Water extends Fluid
     void flowInto(CellMap m, Cell other, int flow)
     {
         if (other instanceof Fluid)
+        {
+            if (other instanceof Water)
+                if (((Water) other).pressure > this.pressure)
+                    return;
+
             ((Fluid) m.buffer[other.y][other.x]).mass += flow;
+        }
         else
             m.setCell(new Water(other.x, other.y, flow));
 
@@ -179,6 +199,36 @@ public class Water extends Fluid
 
         if (flow != 0)
             flowInto(m, side_cell, flow);
+
+    }
+
+    void calculatePressure(CellMap m)
+    {
+        // Check if water cell is above us
+        Cell above = m.getCell(this.x, this.y + 1);
+
+        if (above instanceof Water)
+            this.pressure = ((Water) above).pressure + 1;
+
+        // Check right
+        if (this.x + 1 < m.width)
+        {
+            Cell side_cell = m.getCell(this.x + 1, this.y);
+            if (side_cell instanceof Water)
+                if (((Water) side_cell).pressure > this.pressure)
+                    this.pressure = ((Water) side_cell).pressure;
+        }
+
+        // Check left
+        if (this.x - 1 > 0)
+        {
+            Cell side_cell = m.getCell(this.x - 1, this.y);
+            if (side_cell instanceof Water)
+                if (((Water) side_cell).pressure > this.pressure)
+                    this.pressure = ((Water) side_cell).pressure;
+        }
+
+
 
     }
 

@@ -109,6 +109,7 @@ public class Main
                     case KeyEvent.VK_3 -> m.cursor_type = CellType.STONE;
                     case KeyEvent.VK_4 -> m.cursor_type = CellType.FIRE;
                     case KeyEvent.VK_5 -> m.cursor_type = CellType.OIL;
+                    case KeyEvent.VK_P -> m.PRESSURE_DEBUG = !m.PRESSURE_DEBUG;
                     case KeyEvent.VK_ESCAPE -> {
                         frame.dispose();
                         System.exit(1);
